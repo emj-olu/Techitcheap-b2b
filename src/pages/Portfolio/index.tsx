@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useAnimationControls, Variants } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 import Footer from '../../components/Footer';
+import { Helmet } from 'react-helmet-async'; // For dynamic meta tags
+import unilorinImage from '../../assets/img/unilorin.jpg'; // Corrected import
 
 interface CaseStudy {
   title: string;
@@ -16,7 +18,7 @@ const caseStudies: CaseStudy[] = [
     description:
       'Built a web-based ticketing system for a campus shuttle service. Over 4,000 transactions within 2 weeks and ₦1M revenue generated.',
     techUsed: ['React', 'Django', 'MySQL'],
-    image: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    image: unilorinImage,
     impact: 'Increased operational efficiency and cashless convenience for students.',
   },
   {
@@ -24,7 +26,7 @@ const caseStudies: CaseStudy[] = [
     description:
       'Before pivoting to Accessivo, Techitcheap processed ₦30M+ in transactions. Focused on quick, reliable bill payments.',
     techUsed: ['Flutter', 'Firebase'],
-    image: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+    image: 'https://images.unsplash.com/photo-1523726491678-bf852e717f6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
     impact: 'Enabled 24/7 access to services with fast delivery and low failure rate.',
   },
   {
@@ -47,24 +49,6 @@ const cardVariants: Variants = {
   visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } },
   hover: { scale: 1.05, transition: { duration: 0.3 } },
   tap: { scale: 0.95, transition: { duration: 0.2 } },
-};
-
-const letterVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.05, duration: 0.3 },
-  }),
-};
-
-const wordVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { delay: i * 0.1, duration: 0.3 },
-  }),
 };
 
 const PortfolioPage: React.FC = () => {
@@ -95,194 +79,205 @@ const PortfolioPage: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isMobile]);
 
-  // Letter-by-letter animation component for titles
-  const AnimatedTitle = ({ text, isActive }: { text: string; isActive: boolean }) => {
-    const letters = text.split('');
-    const controls = useAnimationControls();
-
-    useEffect(() => {
-      // Start animation without resetting to hidden
-      controls.start('visible');
-    }, [isActive, controls]);
-
-    return (
-      <span>
-        {letters.map((letter, index) => (
-          <motion.span
-            key={`${letter}-${index}`}
-            className="inline-block text-current"
-            custom={index}
-            initial="hidden"
-            animate={controls}
-            variants={letterVariants}
-            transition={{
-              delay: index * 0.05,
-              duration: 0.3,
-              repeat: isActive ? Infinity : 0,
-              repeatDelay: isActive ? 1 : 0,
-              repeatType: 'loop' as const,
-            }}
-          >
-            {letter === ' ' ? '\u00A0' : letter}
-          </motion.span>
-        ))}
-      </span>
-    );
-  };
-
-  // Word-by-word animation component
-  const AnimatedText = ({ text }: { text: string }) => {
-    const words = text.split(' ');
-    return (
-      <span>
-        {words.map((word, index) => (
-          <motion.span
-            key={index}
-            className="inline-block mr-1"
-            custom={index}
-            initial="hidden"
-            animate="visible"
-            variants={wordVariants}
-          >
-            {word}
-          </motion.span>
-        ))}
-      </span>
-    );
+  // Schema markup for case studies
+  const schemaData = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: caseStudies.map((caseStudy, index) => ({
+      '@type': 'CreativeWork',
+      position: index + 1,
+      name: caseStudy.title,
+      description: caseStudy.description,
+      image: caseStudy.image,
+    })),
   };
 
   return (
-    <div className="font-montserrat bg-white text-gray-900 pt-20">
-      {/* Hero Section */}
-      <motion.section
-        className="relative text-white py-24 px-8 text-center"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
-          }}
-        >
-          <div className="absolute inset-0 bg-[#2454FF] bg-opacity-30" />
-          <div className="absolute inset-0 bg-black bg-opacity-50" />
-        </div>
-        <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Our Work. Real Results.</h1>
-          <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto">
-            We don’t just deliver products—we deliver impact. Explore how Techitcheap has helped
-            businesses launch, grow, and scale with powerful tech.
-          </p>
-          <div className="flex justify-center gap-4 flex-wrap">
-            <button className="bg-[#2454FF] px-6 py-3 rounded-full text-white font-semibold hover:bg-[#1e45d6]">
-              Start a Project
-            </button>
-            <button className="border border-white px-6 py-3 rounded-full text-white font-semibold hover:bg-white hover:text-gray-900">
-              Contact Us
-            </button>
-          </div>
-        </div>
-      </motion.section>
+    <>
+      <Helmet>
+        <title>Portfolio - Our Work and Case Studies | [Your Company Name]</title>
+        <meta
+          name="description"
+          content="Explore our portfolio of successful projects, including case studies like Unilorin Campus Shuttle and VFD Payment Integration, showcasing real results and impactful tech solutions."
+        />
+        <meta
+          name="keywords"
+          content="portfolio, case studies, tech projects, web development, app development, Unilorin shuttle, VFD payment, Techitcheap"
+        />
+        <meta name="robots" content="index, follow" />
+        <meta property="og:title" content="Portfolio - Our Work and Case Studies" />
+        <meta
+          property="og:description"
+          content="Discover our impactful tech projects and case studies, delivering real results for businesses."
+        />
+        <meta property="og:image" content={caseStudies[0].image} />
+        <meta property="og:url" content="https://yourwebsite.com/portfolio" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <script type="application/ld+json">{JSON.stringify(schemaData)}</script>
+      </Helmet>
 
-      {/* Case Studies */}
-      <motion.section
-        className="py-20 px-8"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <h2 className="text-3xl font-bold text-center mb-12">Case Studies</h2>
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-          {caseStudies.map((caseStudy, index) => (
-            <motion.div
-              key={index}
-              className={`relative rounded-tr-3xl rounded-bl-3xl shadow-lg transition-all duration-300 case-study-card w-[100%] mx-auto md:w-full ${
-                activeCard === index ? 'bg-[#2454FF] text-white' : 'bg-white text-gray-900 hover:bg-[#2454FF] hover:text-white'
-              } overflow-hidden`}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={cardVariants}
-              whileHover={!isMobile ? 'hover' : undefined}
-              whileTap="tap"
-              onMouseEnter={() => !isMobile && setActiveCard(index)}
-              onMouseLeave={() => !isMobile && setActiveCard(null)}
-              style={{
-                border: '2px solid transparent',
-                boxShadow: activeCard === index
-                  ? '0 0 15px rgba(36, 84, 255, 0.7)'
-                  : '0 0 10px rgba(36, 84, 255, 0.3)',
-              }}
-            >
-              <img
-                src={caseStudy.image}
-                alt={caseStudy.title}
-                className="w-full h-48 object-cover object-center rounded-tr-3xl"
-                loading="lazy"
-              />
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 text-current">
-                  <AnimatedTitle text={caseStudy.title} isActive={activeCard === index} />
-                </h3>
-                <p className="mb-3">
-                  <AnimatedText text={caseStudy.description} />
-                </p>
-                <div className="mb-3">
-                  <strong>Impact:</strong> <AnimatedText text={caseStudy.impact} />
-                </div>
-                <div className="text-sm flex flex-wrap gap-2">
-                  {caseStudy.techUsed.map((tech, techIndex) => (
+      <main className="font-montserrat bg-white text-gray-900 pt-20">
+        {/* Hero Section */}
+        <motion.section
+          className="relative text-white py-32 px-8 text-center bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A]"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariants}
+        >
+          <div
+            className="absolute inset-0 bg-cover bg-center opacity-50"
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
+            }}
+          >
+            <div className="absolute inset-0 bg-black bg-opacity-30" />
+          </div>
+          <div className="relative z-10">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-lg">
+              Our Work. Real Results.
+            </h1>
+            <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto drop-shadow-md">
+              We don’t just deliver products—we deliver impact. Explore how we’ve helped
+              businesses launch, grow, and scale with powerful tech.
+            </p>
+            <div className="flex justify-center gap-6 flex-wrap">
+              <a
+                href="/start-project"
+                className="bg-gradient-to-r from-[#1E40AF] to-[#1E3A8A] px-8 py-4 rounded-full text-white font-semibold text-lg hover:scale-105 transition-transform duration-300 shadow-lg"
+              >
+                Start a Project
+              </a>
+              <a
+                href="/contact"
+                className="border-2 border-white px-8 py-4 rounded-full text-white font-semibold text-lg hover:bg-[#3B82F6] hover:text-white hover:border-[#3B82F6] transition-colors duration-300 shadow-lg"
+              >
+                Contact Us
+              </a>
+            </div>
+          </div>
+        </motion.section>
+
+        {/* Case Studies */}
+        <motion.section
+          className="py-24 px-8 bg-[#DBEAFE]"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariants}
+        >
+          <h2 className="text-4xl font-bold text-center mb-12 text-[#1E3A8A] drop-shadow-sm">
+            Case Studies
+          </h2>
+          <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+            {caseStudies.map((caseStudy, index) => (
+              <motion.article
+                key={index}
+                className={`group relative rounded-tr-3xl rounded-bl-3xl shadow-xl transition-all duration-300 case-study-card w-[90%] mx-auto md:w-full ${
+                  activeCard === index
+                    ? 'bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A] text-white'
+                    : 'bg-white text-gray-900 hover:bg-gradient-to-br hover:from-[#3B82F6] hover:to-[#2563EB] hover:text-white'
+                } overflow-hidden`}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={cardVariants}
+                whileHover={!isMobile ? 'hover' : undefined}
+                whileTap="tap"
+                onMouseEnter={() => !isMobile && setActiveCard(index)}
+                onMouseLeave={() => !isMobile && setActiveCard(null)}
+                style={{
+                  border: '2px solid transparent',
+                  boxShadow: activeCard === index
+                    ? '0 0 20px rgba(30, 64, 175, 0.8)'
+                    : '0 0 12px rgba(30, 64, 175, 0.4)',
+                }}
+              >
+                <img
+                  src={caseStudy.image}
+                  alt={`${caseStudy.title} project showcase`}
+                  className="w-full h-56 object-cover object-center rounded-tr-3xl"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://via.placeholder.com/400x200?text=Image+Not+Found';
+                  }}
+                />
+                <div className="p-8">
+                  <h3 className="text-xl font-semibold mb-3 text-current group-hover:text-white">
+                    {caseStudy.title}
+                  </h3>
+                  <p
+                    className={`mb-4 text-lg ${
+                      activeCard === index
+                        ? '!text-white'
+                        : 'text-gray-700 group-hover:text-white'
+                    }`}
+                  >
+                    {caseStudy.description}
+                  </p>
+                  <div className="mb-4">
+                    <strong className="text-current group-hover:text-white">Impact:</strong>{' '}
                     <span
-                      key={techIndex}
-                      className={`px-2 py-1 rounded-md ${
+                      className={`text-lg ${
                         activeCard === index
-                          ? 'bg-white text-[#2454FF]'
-                          : 'bg-[#2454FF] text-white'
+                          ? '!text-white'
+                          : 'text-gray-700 group-hover:text-white'
                       }`}
                     >
-                      {tech}
+                      {caseStudy.impact}
                     </span>
-                  ))}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {caseStudy.techUsed.map((tech, techIndex) => (
+                      <span
+                        key={techIndex}
+                        className="px-3 py-1 rounded-full text-sm font-medium bg-[#3B82F6] text-white transition-colors duration-300"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
+              </motion.article>
+            ))}
+          </div>
+        </motion.section>
 
-      {/* CTA Section */}
-      <motion.section
-        className="py-20 px-8 bg-[#2454FF] text-white text-center"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <h2 className="text-3xl font-bold mb-4">Let’s Make Your Project the Next Success Story</h2>
-        <p className="mb-8 max-w-xl mx-auto">
-          Whether you’re launching a product, redesigning your platform, or scaling your
-          backend—Techitcheap is ready to help.
-        </p>
-        <button className="bg-white text-[#2454FF] px-6 py-3 font-semibold rounded-full hover:bg-gray-200">
-          Start a Project
-        </button>
-      </motion.section>
+        {/* CTA Section */}
+        <motion.section
+          className="py-24 px-8 bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A] text-white text-center"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariants}
+        >
+          <h2 className="text-4xl font-bold mb-10 drop-shadow-lg">
+            Let’s Make Your Project the Next Success Story
+          </h2>
+          <p className="mb-12 max-w-2xl mx-auto text-lg">
+            Whether you’re launching a product, redesigning your platform, or scaling your
+            backend, we’re ready to help.
+          </p>
+          <a
+            href="/start-project"
+            className="bg-white text-[#1E3A8A] px-8 py-4 font-semibold rounded-full text-lg hover:bg-[#3B82F6] hover:text-white transition-colors duration-300 shadow-lg"
+          >
+            Start a Project
+          </a>
+        </motion.section>
 
-      {/* Footer */}
-      <motion.footer
-        className="bg-gray-900 text-white py-6 text-center text-sm"
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={sectionVariants}
-      >
-        <Footer />
-      </motion.footer>
-    </div>
+        {/* Footer */}
+        <motion.footer
+          className="bg-[#1E3A8A] text-white py-8 text-center text-base"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={sectionVariants}
+        >
+          <Footer />
+        </motion.footer>
+      </main>
+    </>
   );
 };
 

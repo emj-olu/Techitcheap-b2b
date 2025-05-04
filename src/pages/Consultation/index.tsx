@@ -64,6 +64,7 @@ const ConsultationPage: React.FC = () => {
         }
       });
 
+      console.log('Active card:', closestCard); // Debug log
       setActiveCard(closestCard);
     };
 
@@ -104,32 +105,33 @@ const ConsultationPage: React.FC = () => {
     <div className="font-montserrat pt-20 text-gray-900">
       {/* Hero */}
       <motion.section
-        className="relative text-white py-24 px-8 text-center"
+        className="relative text-white py-32 px-8 text-center bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A]"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={sectionVariants}
       >
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center opacity-50"
           style={{
             backgroundImage: `url('https://images.unsplash.com/photo-1516321497487-e288fb19713f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`,
           }}
         >
-          <div className="absolute inset-0 bg-[#2454FF] bg-opacity-30" />
-          <div className="absolute inset-0 bg-black bg-opacity-50" />
+          <div className="absolute inset-0 bg-black bg-opacity-30" />
         </div>
         <div className="relative z-10">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Let’s Talk Tech</h1>
-          <p className="text-lg md:text-xl mb-8 max-w-xl mx-auto">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 drop-shadow-lg">
+            Let’s Talk Tech
+          </h1>
+          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto drop-shadow-md">
             Whether you’re building something new or improving what exists, we’re here to guide you.
             Book a free consultation today.
           </p>
-          <div className="flex justify-center gap-4 flex-wrap">
-            <button className="bg-[#2454FF] px-6 py-3 rounded-full text-white font-semibold hover:bg-[#1e45d6]">
+          <div className="flex justify-center gap-6 flex-wrap">
+            <button className="bg-gradient-to-r from-[#1E40AF] to-[#1E3A8A] px-8 py-4 rounded-full text-white font-semibold text-lg hover:scale-105 transition-transform duration-300 shadow-lg">
               Schedule Now
             </button>
-            <button className="border border-white px-6 py-3 rounded-full text-white font-semibold hover:bg-white hover:text-gray-900">
+            <button className="border-2 border-white px-8 py-4 rounded-full text-white font-semibold text-lg hover:bg-[#3B82F6] hover:text-white hover:border-[#3B82F6] transition-colors duration-300 shadow-lg">
               Learn More
             </button>
           </div>
@@ -138,23 +140,27 @@ const ConsultationPage: React.FC = () => {
 
       {/* How It Works */}
       <motion.section
-        className="py-20 px-8 bg-white text-center"
+        className="py-24 px-8 bg-[#DBEAFE] text-center"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={sectionVariants}
       >
-        <h2 className="text-3xl font-bold mb-4">How Our Consultation Works</h2>
-        <p className="mb-12 max-w-2xl mx-auto">
+        <h2 className="text-4xl font-bold mb-12 text-[#1E3A8A] drop-shadow-sm">
+          How Our Consultation Works
+        </h2>
+        <p className="mb-12 max-w-3xl mx-auto text-lg">
           We make it simple to get started. Our process is designed to understand your needs and
           provide clear, actionable solutions.
         </p>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto text-left">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto text-left">
           {steps.map((step, i) => (
             <motion.div
               key={i}
-              className={`p-6 rounded-tr-3xl rounded-bl-3xl shadow-lg transition-all duration-300 how-it-works-card w-[90%] mx-auto md:w-full ${
-                activeCard === i ? 'bg-[#2454FF] text-white' : 'bg-white text-gray-900 hover:bg-[#2454FF] hover:text-white'
+              className={`group p-6 rounded-tr-3xl rounded-bl-3xl shadow-xl transition-all duration-300 how-it-works-card w-[90%] mx-auto md:w-full ${
+                activeCard === i
+                  ? 'bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A] text-white'
+                  : 'bg-white text-gray-900 hover:bg-gradient-to-br hover:from-[#3B82F6] hover:to-[#2563EB] hover:text-white'
               }`}
               initial="hidden"
               whileInView="visible"
@@ -167,8 +173,8 @@ const ConsultationPage: React.FC = () => {
               style={{
                 border: '2px solid transparent',
                 boxShadow: activeCard === i
-                  ? '0 0 15px rgba(36, 84, 255, 0.7)'
-                  : '0 0 10px rgba(36, 84, 255, 0.3)',
+                  ? '0 0 20px rgba(30, 64, 175, 0.8)'
+                  : '0 0 12px rgba(30, 64, 175, 0.4)',
               }}
             >
               <div className="flex items-center mb-4">
@@ -179,15 +185,23 @@ const ConsultationPage: React.FC = () => {
                 >
                   <step.icon
                     className={`w-8 h-8 ${
-                      activeCard === i ? 'text-white' : 'text-[#2454FF]'
-                    } transition-colors duration-300`}
+                      activeCard === i ? 'text-white' : 'text-[#1E40AF]'
+                    } group-hover:text-white transition-colors duration-300`}
                   />
                 </motion.div>
-                <h3 className="text-xl font-semibold ml-4 text-current">
+                <h3 className="text-xl font-semibold ml-4 text-current group-hover:text-white">
                   {step.title}
                 </h3>
               </div>
-              <p>{step.description}</p>
+              <p
+                className={`text-lg ${
+                  activeCard === i
+                    ? '!text-white'
+                    : 'text-gray-700 group-hover:text-white'
+                }`}
+              >
+                {step.description}
+              </p>
             </motion.div>
           ))}
         </div>
@@ -195,22 +209,24 @@ const ConsultationPage: React.FC = () => {
 
       {/* Consultation Form */}
       <motion.section
-        className="py-20 px-8 bg-gray-100 text-center"
+        className="py-24 px-8 bg-[#DBEAFE] text-center"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={sectionVariants}
       >
-        <h2 className="text-3xl font-bold mb-4">Book Your Free Consultation</h2>
-        <p className="mb-12 max-w-2xl mx-auto">
+        <h2 className="text-4xl font-bold mb-12 text-[#1E3A8A] drop-shadow-sm">
+          Book Your Free Consultation
+        </h2>
+        <p className="mb-12 max-w-3xl mx-auto text-lg">
           Fill out the form below, and we’ll reach out to schedule your consultation.
         </p>
         <form
           onSubmit={handleSubmit}
-          className="w-[100%] mx-auto md:max-w-lg bg-white p-8 rounded-lg shadow-lg"
+          className="w-[90%] mx-auto md:max-w-lg bg-white p-8 rounded-xl shadow-xl"
         >
-          <div className="mb-4">
-            <label htmlFor="name" className="block text-left font-semibold mb-2">
+          <div className="mb-6">
+            <label htmlFor="name" className="block text-left font-semibold mb-2 text-[#1E3A8A]">
               Name
             </label>
             <input
@@ -220,12 +236,12 @@ const ConsultationPage: React.FC = () => {
               value={form.name}
               placeholder="John Doe"
               onChange={handleChange}
-              className="w-full px-4 py-2 border bg-gray-100 rounded focus:outline-none focus:ring-2 focus:ring-[#2454FF]"
+              className="w-full px-4 py-3 border bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E40AF]"
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-left font-semibold mb-2">
+          <div className="mb-6">
+            <label htmlFor="email" className="block text-left font-semibold mb-2 text-[#1E3A8A]">
               Email
             </label>
             <input
@@ -235,12 +251,12 @@ const ConsultationPage: React.FC = () => {
               value={form.email}
               placeholder="user@email.com"
               onChange={handleChange}
-              className="w-full px-4 bg-gray-100 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2454FF]"
+              className="w-full px-4 py-3 bg-gray-100 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E40AF]"
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="service" className="block text-left font-semibold mb-2">
+          <div className="mb-6">
+            <label htmlFor="service" className="block text-left font-semibold mb-2 text-[#1E3A8A]">
               Service Needed
             </label>
             <select
@@ -248,7 +264,7 @@ const ConsultationPage: React.FC = () => {
               name="service"
               value={form.service}
               onChange={handleChange}
-              className="w-full px-4 bg-gray-100 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2454FF]"
+              className="w-full px-4 py-3 bg-gray-100 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E40AF]"
               required
             >
               <option value="">Select a service</option>
@@ -259,8 +275,8 @@ const ConsultationPage: React.FC = () => {
               <option value="Brand Identity Design">Brand Identity Design</option>
             </select>
           </div>
-          <div className="mb-4">
-            <label htmlFor="date" className="block text-left font-semibold mb-2">
+          <div className="mb-6">
+            <label htmlFor="date" className="block text-left font-semibold mb-2 text-[#1E3A8A]">
               Preferred Date
             </label>
             <input
@@ -269,12 +285,12 @@ const ConsultationPage: React.FC = () => {
               name="date"
               value={form.date}
               onChange={handleChange}
-              className="w-full bg-gray-100 px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-[#2454FF]"
+              className="w-full px-4 py-3 bg-gray-100 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E40AF]"
               required
             />
           </div>
-          <div className="mb-4">
-            <label htmlFor="message" className="block text-left font-semibold mb-2">
+          <div className="mb-6">
+            <label htmlFor="message" className="block text-left font-semibold mb-2 text-[#1E3A8A]">
               Message
             </label>
             <textarea
@@ -282,14 +298,14 @@ const ConsultationPage: React.FC = () => {
               name="message"
               value={form.message}
               onChange={handleChange}
-              className="w-full px-4 py-2 bg-gray-100 border rounded focus:outline-none focus:ring-2 focus:ring-[#2454FF]"
+              className="w-full px-4 py-3 bg-gray-100 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#1E40AF]"
               rows={4}
               placeholder="Tell us about your project..."
             />
           </div>
           <button
             type="submit"
-            className="w-full bg-[#2454FF] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#1e45d6]"
+            className="w-full bg-gradient-to-r from-[#1E40AF] to-[#1E3A8A] text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-gradient-to-r hover:from-[#3B82F6] hover:to-[#2563EB] transition-colors duration-300 shadow-lg"
           >
             Submit
           </button>
@@ -298,24 +314,26 @@ const ConsultationPage: React.FC = () => {
 
       {/* CTA Section */}
       <motion.section
-        className="py-20 px-8 bg-[#2454FF] text-white text-center"
+        className="py-24 px-8 bg-gradient-to-br from-[#1E40AF] to-[#1E3A8A] text-white text-center"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
         variants={sectionVariants}
       >
-        <h2 className="text-3xl font-bold mb-4">Ready to Start Your Project?</h2>
-        <p className="mb-8 max-w-xl mx-auto">
+        <h2 className="text-4xl font-bold mb-10 drop-shadow-lg">
+          Ready to Start Your Project?
+        </h2>
+        <p className="mb-12 max-w-2xl mx-auto text-lg">
           Let’s build something great together. Contact us to turn your vision into reality.
         </p>
-        <button className="bg-white text-[#2454FF] px-6 py-3 font-semibold rounded-full hover:bg-gray-200">
+        <button className="bg-white text-[#1E3A8A] px-8 py-4 font-semibold rounded-full text-lg hover:bg-[#3B82F6] hover:text-white transition-colors duration-300 shadow-lg">
           Get in Touch
         </button>
       </motion.section>
 
       {/* Footer */}
       <motion.footer
-        className="bg-gray-900 text-white py-6 text-center text-sm"
+        className="bg-[#1E3A8A] text-white py-8 text-center text-base"
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
